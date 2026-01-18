@@ -57,7 +57,7 @@ def login():
 
         else:
             os.system("cls")
-            print("\n\n%50s"%"" + Back.RED + Fore.BLUE + " DETAILS MISMATCH , TRY AGAIN ")
+            print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " DETAILS MISMATCH , TRY AGAIN ")
             time.sleep(1)
             login()
 
@@ -70,7 +70,25 @@ def logout():
 
 
 def display():
-    pass
+
+    seats = [['A1','A2','A3','A4','A5','A6'],
+             ['B1','B2','B3','B4','B5','B6','B7','B8'],
+             ['C1','C2','C3','C4','C4','C5','C6','C7','C8','C9','C10'],
+             ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12']]
+    
+    for i in seats:
+        print("\n")
+        print("%40s"%"")
+        for m in i: 
+           print( Fore.GREEN + "|",m,"|",end="\t")
+
+
+def booking():
+    os.system("cls")
+    
+
+
+        
 
 
 
@@ -94,7 +112,6 @@ def home():
     if c == "3":
 
         logout()
-
 
 
 

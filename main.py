@@ -80,12 +80,22 @@ def display():
         print("\n")
         print("%40s"%"")
         for m in i: 
-           print( Fore.GREEN + "|",m,"|",end="\t")
+
+            print( Fore.GREEN + "|",m,"|",end="\t")
 
 
 def booking():
     os.system("cls")
-    
+    print("\n")
+    print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX + " BOOK TICKETS ")
+    print("\n")
+    display()
+    print("\n")
+    print( "%40s"%"" +  Fore.GREEN + "How many seats do you want ?")
+    num= input("%40s"%"" + Fore.GREEN + ">>>")
+    print("\n")
+
+
 
 
         
@@ -104,7 +114,7 @@ def home():
     c = input("\n%40s"%"" + Fore.GREEN + ">>> ")
 
     if c == "1":
-        pass
+        booking()
 
     if c == "2":
         pass

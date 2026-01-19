@@ -65,28 +65,32 @@ def login():
     mycur.execute("SELECT username,password FROM users;")
 
     data = mycur.fetchall()
+    
+    time.sleep(3)
 
+    found = False
 
     for i in data:
-        if username == i[1] and password == i[2]:
+        if username == i[0] and password == i[1]:
             os.system("cls")
             print("\n%50s"%"" + Back.GREEN + Fore.BLUE + " LOG IN SUCCESFUL ")
             time.sleep(1)
+            found = True
             loggedin = True
             home()
             break
 
+    if not found:
+        os.system("cls")
+        print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " DETAILS MISMATCH , TRY AGAIN ")
+
+        print("\n\n%45s"%"" + Fore.GREEN + "Would you like to sign up ? (y/n)")
+        x = input("%45s"%"" + Fore.GREEN + ">>> ")
+
+        if x == "y":
+            signup()
         else:
-            os.system("cls")
-            print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " DETAILS MISMATCH , TRY AGAIN ")
-
-            print("\n\n%45s"%"" + Fore.GREEN + "Would you like to sign up ? (y/n)")
-            x = input("%45s"%"" + Fore.GREEN + ">>> ")
-
-            if x == "y":
-                signup()
-            else:
-                login()
+            login()
 
 
 
@@ -104,15 +108,36 @@ seats = [['A1','A2','A3','A4','A5','A6'],
 
 
 def display():
+
+    mycur.execute("SELECT seat FROM orders;")
+
+    used_seats = []
+
+    for i in mycur.fetchall():
+        used_seats.append(i[0])
+
+    print(used_seats)    
     
     for i in seats:
         print("\n")
-        for m in i: 
-            print( Fore.GREEN + "|",m,"|",end="\t")
+        for m in i:
+            if m in used_seats: 
+               print( Fore.BLACK + Back.RED + "| " + m + " |",end="\t")
+            else:
+               print( Fore.GREEN + Back.LIGHTGREEN_EX + "| " + m + " |",end="\t")
+
 
 
 def booking():
     os.system("cls")
+
+    mycur.execute("SELECT seat FROM users u , orders o WHERE u.id = o.id;")
+    z = mycur.fetchone()
+    if z:
+        print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " YOU HAVE ALREADY BOOKED A SEAT ")
+        time.sleep(3)
+        home()
+
     print("\n")
     print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX + " BOOK TICKETS ")
     print("\n")
@@ -124,18 +149,18 @@ def booking():
 
     seatno = input("%50s"%"" + Fore.GREEN + ">>> ")
     
-    mycur.execute("SELECT user_id FROM users WHERE username = %s AND password = %s ",(username,password))
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s ",(username,password))
 
-    global user_id
+    global id
 
-    user_id = mycur.fetchone()[0]
+    id = mycur.fetchone()[0]
 
-    print("user_id : " , user_id )
-    print(user_id,seatno)
+    print("id : " , id )
+    print(id,seatno)
 
     load_query = "INSERT INTO orders VALUES(%s,%s)"
     
-    mycur.execute(load_query,(user_id,seatno))
+    mycur.execute(load_query,(id,seatno))
     myconn.commit()
     print("\n%50s"%"" + Fore.GREEN + "Booked seat ", seatno)
 
@@ -145,21 +170,45 @@ def booking():
 
 def orders():
     os.system("cls")
+
+    mycur.execute("SELECT seat FROM orders WHERE id = %s AND username = %s ",(id,username))
+
+    m = mycur.fetchone()
+    print(m)
+
+    if not m:
+        print("\n\n%50s" + Fore.BLACK + Back.RED + " YOU HAVE NOT BOOKED ANY SEAT ")
+        time.sleep(3)
+        home()
+
     print("\n")
     print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX  + " YOUR ORDER DETAILS " )
 
-    print("%40s"%"" + Fore.GREEN + "Username : "  , username)
+    print("\n%40s"%"" + Fore.GREEN + "Username : "  , username)
     print("\n")
 
-    query = "SELECT seat FROM orders WHERE user_id = %s;"
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
 
 
 
-    mycur.execute(query,(user_id,))
+    myid = mycur.fetchone()
+
+    query = "SELECT seat FROM orders WHERE id = %s;"
+
+
+
+    mycur.execute(query,(myid[0],))
 
     seatno = mycur.fetchone()
 
-    print("%40s"%"" + Fore.GREEN + "Seat number : "  , seatno)
+    print("\n%40s"%"" + Fore.GREEN + "Seat number : "  , seatno[0])
+
+
+    print("\n%30s"%"" + Fore.GREEN + "REDIRECTING...")
+    time.sleep(5)
+    os.system('cls')
+    home()
+
 
 
 

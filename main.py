@@ -8,10 +8,6 @@ os.system("cls")
 loggedin = False
 
 
-
-
-
-
 try: 
 
     myconn = mysql.connector.connect(host="localhost",
@@ -139,7 +135,6 @@ def display():
                print( Fore.GREEN + Back.LIGHTGREEN_EX + "| " + m + " |",end="\t")
 
 
-
 def booking():
     os.system("cls")
 
@@ -242,13 +237,6 @@ def orders():
 
 
 
-
-
-
-        
-
-
-
 def home():
     os.system("cls")
     print("\n\n%50s"%"" + Fore.GREEN + Back.BLUE + " DASHBOARD ")
@@ -270,10 +258,6 @@ def home():
 
         logout()
         loggedin = False
-
-
-
-
 
 
 while True:

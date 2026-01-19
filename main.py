@@ -68,7 +68,7 @@ def login():
 
 
     for i in data:
-        if username and password in i:
+        if username == i[1] and password == i[2]:
             os.system("cls")
             print("\n%50s"%"" + Back.GREEN + Fore.BLUE + " LOG IN SUCCESFUL ")
             time.sleep(1)

@@ -32,6 +32,10 @@ mycur = myconn.cursor()
 
 
 def login():
+
+    global username
+    global password
+
     os.system('cls')
     print( "\n\n%50s"%""+ Back.GREEN + Fore.LIGHTGREEN_EX + " LOGIN ")
 
@@ -66,7 +70,7 @@ def logout():
     os.system("cls")
     print("\n\n%50s"%"" + Fore.BLUE + Back.RED + " LOGGING OUT ")
     time.sleep(1)
-    loggedin = False
+    login()
 
 
 seats = [['A1','A2','A3','A4','A5','A6'],
@@ -100,6 +104,14 @@ def booking():
         print("\n")
         bookings.append(s)
     
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s ",(username,password))
+
+    id = mycur.fetchone()[0]
+
+    print("id : " , id )
+
+    load_query = "INSERT INTO TABLE orders VALUES(%s,%s,%s)",()
+    
     
     
     home()
@@ -132,17 +144,17 @@ def home():
     if c == "3":
 
         logout()
+        loggedin = False
 
 
 
 
 
-while True:
+while loggedin:
+    home()
 
-    if loggedin:
-        home()
-    else:
-        login()
+if not loggedin:
+    login()
    
 
 

@@ -30,6 +30,23 @@ except:
 mycur = myconn.cursor()
 
 
+def signup():
+    os.system('cls')
+    print( "\n\n%50s"%""+ Back.GREEN + Fore.LIGHTGREEN_EX + " SIGN UP ")
+
+    print( "\n%45s"%""+ Fore.GREEN + "Enter username ")
+    username = input("%40s"%""+ Fore.GREEN+ ">>> ")
+    
+    print( "\n%45s"%""+ Fore.GREEN + "Enter password")
+    password = input( "%40s"%""+Fore.GREEN+">>> ")
+
+    mycur.execute("INSERT INTO users VALUES(%s,%s,%s)",( random.randrange(100,1000),username,password))
+    myconn.commit()
+    print("\n%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX + " USER CREATED ")
+    time.sleep(3)
+    login()
+
+
 
 def login():
 
@@ -62,8 +79,15 @@ def login():
         else:
             os.system("cls")
             print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " DETAILS MISMATCH , TRY AGAIN ")
-            time.sleep(1)
-            login()
+
+            print("\n\n%45s"%"" + Fore.GREEN + "Would you like to sign up ? (y/n)")
+            x = input("%45s"%"" + Fore.GREEN + ">>> ")
+
+            if x == "y":
+                signup()
+            else:
+                login()
+
 
 
 def logout():
@@ -94,27 +118,48 @@ def booking():
     print("\n")
     display()
     print("\n")
-    print( "%40s"%"" +  Fore.GREEN + "How many seats do you want ?")
-    num= int(input("%40s"%"" + Fore.GREEN + ">>> "))
-    print("\n")
-    bookings = []
-    for i in range(num):
-        print("%40s"%"" + Fore.GREEN + "Enter seat number : ")
-        s = input("%40s"%"" + Fore.GREEN + ">>> ")
-        print("\n")
-        bookings.append(s)
-    
-    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s ",(username,password))
+    print("%50s"%"" + Fore.GREEN + "Enter seat number  ")
 
-    id = mycur.fetchone()[0]
 
-    print("id : " , id )
 
-    load_query = "INSERT INTO TABLE orders VALUES(%s,%s,%s)",()
+    seatno = input("%50s"%"" + Fore.GREEN + ">>> ")
     
+    mycur.execute("SELECT user_id FROM users WHERE username = %s AND password = %s ",(username,password))
+
+    global user_id
+
+    user_id = mycur.fetchone()[0]
+
+    print("user_id : " , user_id )
+    print(user_id,seatno)
+
+    load_query = "INSERT INTO orders VALUES(%s,%s)"
     
+    mycur.execute(load_query,(user_id,seatno))
+    myconn.commit()
+    print("\n%50s"%"" + Fore.GREEN + "Booked seat ", seatno)
+
+    time.sleep(3)
     
     home()
+
+def orders():
+    os.system("cls")
+    print("\n")
+    print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX  + " YOUR ORDER DETAILS " )
+
+    print("%40s"%"" + Fore.GREEN + "Username : "  , username)
+    print("\n")
+
+    query = "SELECT seat FROM orders WHERE user_id = %s;"
+
+
+
+    mycur.execute(query,(user_id,))
+
+    seatno = mycur.fetchone()
+
+    print("%40s"%"" + Fore.GREEN + "Seat number : "  , seatno)
 
 
 
@@ -139,7 +184,7 @@ def home():
         booking()
 
     if c == "2":
-        pass
+        orders()
 
     if c == "3":
 
@@ -150,11 +195,19 @@ def home():
 
 
 
-while loggedin:
-    home()
 
-if not loggedin:
-    login()
+while True:
+    print("\n%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX + " WELCOME TO FILM TICKET BOOKING APP ")
+    print("\n\n%45s"%"" + Fore.GREEN + "1> Sign Up")
+    print("\n%45s"%"" + Fore.GREEN + "2> Login")
+    c = input("\n%45s"%"" + Fore.GREEN + ">>> ")
+
+    if c == "1":
+        signup()
+    if c == "2":
+        login()
+
+
    
 
 

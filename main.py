@@ -103,7 +103,7 @@ def logout():
 
 seats = [['A1','A2','A3','A4','A5','A6'],
         ['B1','B2','B3','B4','B5','B6','B7','B8'],
-        ['C1','C2','C3','C4','C4','C5','C6','C7','C8','C9','C10'],
+        ['C1','C2','C3','C4','C5','C6','C7','C8','C9','C10'],
         ['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12']]
 
 
@@ -114,14 +114,26 @@ def display():
     used_seats = []
 
     for i in mycur.fetchall():
-        used_seats.append(i[0])
+        used_seats.append(i[0].upper())
+    
 
-    print(used_seats)    
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+
+    myid = mycur.fetchone()[0]
+
+    mycur.execute("SELECT seat FROM orders WHERE id = %s",(myid,))
+
+    
+
+    myseat = mycur.fetchone()
+
     
     for i in seats:
         print("\n")
         for m in i:
-            if m in used_seats: 
+            if myseat and m == myseat[0].upper():
+               print( Fore.GREEN + Back.BLUE + "| " + m + " |",end="\t")
+            elif m in used_seats: 
                print( Fore.BLACK + Back.RED + "| " + m + " |",end="\t")
             else:
                print( Fore.GREEN + Back.LIGHTGREEN_EX + "| " + m + " |",end="\t")
@@ -131,17 +143,23 @@ def display():
 def booking():
     os.system("cls")
 
-    mycur.execute("SELECT seat FROM users u , orders o WHERE u.id = o.id;")
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+
+    myid = mycur.fetchone()[0]
+
+    mycur.execute("SELECT seat FROM orders where id = %s",(myid,))
+
     z = mycur.fetchone()
-    if z:
-        print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " YOU HAVE ALREADY BOOKED A SEAT ")
-        time.sleep(3)
-        home()
+
 
     print("\n")
     print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX + " BOOK TICKETS ")
     print("\n")
     display()
+    if z:
+      print("\n\n%50s"%"" + Back.RED + Fore.BLACK + " YOU HAVE ALREADY BOOKED A SEAT ")
+      time.sleep(3)
+      home()
     print("\n")
     print("%50s"%"" + Fore.GREEN + "Enter seat number  ")
 
@@ -154,9 +172,6 @@ def booking():
     global id
 
     id = mycur.fetchone()[0]
-
-    print("id : " , id )
-    print(id,seatno)
 
     load_query = "INSERT INTO orders VALUES(%s,%s)"
     
@@ -171,27 +186,43 @@ def booking():
 def orders():
     os.system("cls")
 
-    mycur.execute("SELECT seat FROM orders WHERE id = %s AND username = %s ",(id,username))
+
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+
+    myid = mycur.fetchone()[0]
+
+    mycur.execute("SELECT seat FROM orders WHERE id = %s",(myid,))
 
     m = mycur.fetchone()
-    print(m)
+
+    print("\n\n")
+    print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX  + " YOUR ORDER DETAILS " )
+
 
     if not m:
-        print("\n\n%50s" + Fore.BLACK + Back.RED + " YOU HAVE NOT BOOKED ANY SEAT ")
+        display()
+        print("\n\n")
+        print("\n%50s"%"" + Fore.BLACK + Back.RED + " YOU HAVE NOT BOOKED ANY SEAT ")
         time.sleep(3)
         home()
 
     print("\n")
-    print("%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX  + " YOUR ORDER DETAILS " )
+    display()
 
+    print("\n\n")
     print("\n%40s"%"" + Fore.GREEN + "Username : "  , username)
     print("\n")
 
+
     mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
 
-
+    
 
     myid = mycur.fetchone()
+
+    
+    print("\n%40s"%"" + Fore.GREEN + "ID : "  , myid[0])
+    print("\n")
 
     query = "SELECT seat FROM orders WHERE id = %s;"
 
@@ -205,7 +236,7 @@ def orders():
 
 
     print("\n%30s"%"" + Fore.GREEN + "REDIRECTING...")
-    time.sleep(5)
+    time.sleep(10)
     os.system('cls')
     home()
 

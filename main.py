@@ -36,7 +36,8 @@ def signup():
     print( "\n%45s"%""+ Fore.GREEN + "Enter password")
     password = input( "%40s"%""+Fore.GREEN+">>> ")
 
-    mycur.execute("INSERT INTO users VALUES(%s,%s,%s)",( random.randrange(100,1000),username,password))
+    mycur.execute("INSERT INTO users VALUES(%s,%s,%s)",
+                  ( random.randrange(100,1000),username,password))
     myconn.commit()
     print("\n%50s"%"" + Back.GREEN + Fore.LIGHTGREEN_EX + " USER CREATED ")
     time.sleep(3)
@@ -113,7 +114,8 @@ def display():
         used_seats.append(i[0].upper())
     
 
-    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",
+                  (username,password))
 
     myid = mycur.fetchone()[0]
 
@@ -138,7 +140,8 @@ def display():
 def booking():
     os.system("cls")
 
-    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",
+                  (username,password))
 
     myid = mycur.fetchone()[0]
 
@@ -162,7 +165,8 @@ def booking():
 
     seatno = input("%50s"%"" + Fore.GREEN + ">>> ")
     
-    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s ",(username,password))
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s ",
+                  (username,password))
 
     global id
 
@@ -182,7 +186,8 @@ def orders():
     os.system("cls")
 
 
-    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",
+                  (username,password))
 
     myid = mycur.fetchone()[0]
 
@@ -209,7 +214,8 @@ def orders():
     print("\n")
 
 
-    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",(username,password))
+    mycur.execute("SELECT id FROM users WHERE username = %s AND password = %s",
+                  (username,password))
 
     
 
